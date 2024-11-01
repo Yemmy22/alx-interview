@@ -1,5 +1,9 @@
 #!/usr/bin/python3
 
+"""
+A validUTF8 function module
+"""
+
 
 def validUTF8(data):
     """

@@ -4,7 +4,7 @@
 A validUTF8 function module
 """
 
-
+'''
 def validUTF8(data):
     """
     Determines if a given data set represents a valid UTF-8 encoding
@@ -38,4 +38,38 @@ def validUTF8(data):
             else:
                 return False  # Invalid starting byte
 
+    return remaining_bytes == 0
+'''
+
+
+def validUTF8(data):
+    """
+    Determines if a given data set represents a valid UTF-8 encoding
+    """
+    # Initialize count for continuation bytes
+    remaining_bytes = 0
+
+    for byte in data:
+        # Get only the 8 least significant bits
+        byte = byte & 0xFF
+
+        if remaining_bytes == 0:
+            # This is a starting byte - determine sequence length
+            if byte & 0b10000000 == 0:  # 0xxxxxxx
+                remaining_bytes = 0
+            elif byte & 0b11100000 == 0b11000000:  # 110xxxxx
+                remaining_bytes = 1
+            elif byte & 0b11110000 == 0b11100000:  # 1110xxxx
+                remaining_bytes = 2
+            elif byte & 0b11111000 == 0b11110000:  # 11110xxx
+                remaining_bytes = 3
+            else:
+                return False
+        else:
+            # This should be a continuation byte (10xxxxxx)
+            if byte & 0b11000000 != 0b10000000:
+                return False
+            remaining_bytes -= 1
+
+    # All sequences should be complete
     return remaining_bytes == 0

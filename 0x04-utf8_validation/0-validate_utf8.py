@@ -19,6 +19,7 @@ def validUTF8(data):
     CONTINUATION_PATTERN = 0b10000000
 
     for byte in data:
+        byte = byte & 0xFF
         if remaining_bytes > 0:
             # Check if byte is a valid continuation byte
             if (byte & CONTINUATION_MASK) != CONTINUATION_PATTERN:
